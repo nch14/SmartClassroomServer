@@ -8,8 +8,9 @@ import net.ClassroomClient;
 public class Classroom {
 
     public static final int OPEN=1;
-    public static final int Close=2;
-    public static final int rent=3;
+    public static final int CLOSE=0;
+    public static final int RENT=3;
+    public static final int EXCEPTION=4;
 
 
     /**
@@ -30,6 +31,39 @@ public class Classroom {
 
     public void bind(ClassroomClient classroomClient){
         this.classroomClient = classroomClient;
+    }
+
+
+    public void openClassroom(){
+        this.state=OPEN;
+        classroomClient.addMessage("open;");
+    }
+
+    public void closeClassroom(){
+        this.state= CLOSE;
+        classroomClient.addMessage("close;");
+    }
+
+    public void rentClassroom(){
+        this.state= RENT;
+        classroomClient.addMessage("open;");
+    }
+
+    public String getH(){
+        if (classroomClient!=null)
+            return classroomClient.humidity;
+        return "null";
+    }
+
+    public String getT(){
+        if (classroomClient!=null)
+            return classroomClient.temperature+"°C";
+        return "null";
+    }
+    public int getNumOfStudent(){
+        if (classroomClient!=null)
+            return classroomClient.currentNumOfStudents;
+        return 0;
     }
 
 }

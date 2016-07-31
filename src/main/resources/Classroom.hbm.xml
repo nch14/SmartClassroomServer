@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="po">
+    <class name="po.ClassroomPO" table="classroom"> <!-- 如果我们不写table,则默认表名与类名一致 -->
+        <!-- 主键 -->
+        <id name="name">
+            <!-- 主键的生成策略 -->
+            <generator class="assigned"/>
+        </id>
+        <!-- 其他属性，name对应实体类的属性，column对应关系型数据库表的列 -->
+    </class>
+</hibernate-mapping>

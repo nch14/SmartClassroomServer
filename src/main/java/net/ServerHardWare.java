@@ -8,7 +8,7 @@ import java.util.ArrayList;
  * Created by chenh on 2016/7/27.
  */
 public class ServerHardWare {
-    public static final int PORT = 12346;//
+    public static final int PORT = 12345;//
 
     ArrayList<Socket> s;
 

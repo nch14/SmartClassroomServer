@@ -52,11 +52,14 @@ public class ClassroomClient extends Client implements Runnable {
             for (Character character:chars){
                 s+=character;
             }
+            System.out.println("接受到一条数据！");
             handleMessage(s);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
+
 
     protected void write(){
         DataOutputStream outputStream = null;
@@ -92,6 +95,8 @@ public class ClassroomClient extends Client implements Runnable {
                 name=seg[1];
                 //注册和绑定设备
                 ClassroomManage.getClassroomManage().bindClassroomAndDevice(this);
+                //告诉设备空调的开启温度
+                addMessage("t:26");
                 break;
             case '+':
                 currentNumOfStudents++;
@@ -106,4 +111,6 @@ public class ClassroomClient extends Client implements Runnable {
                 break;
         }
     }
+
+
 }

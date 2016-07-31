@@ -12,6 +12,8 @@ public class User {
 
     public String id;
 
+    public String password;
+
     public int identify;
 
 }

@@ -1,7 +1,7 @@
 package model;
 
 import net.ClassroomClient;
-import util.json.LoadClassroomUtil;
+import util.LoadUtil;
 import vo.Classroom;
 
 import java.util.ArrayList;
@@ -11,20 +11,15 @@ import java.util.ArrayList;
  * Created by chenh on 2016/7/27.
  */
 public class ClassroomManage {
-    /**
-     * 未开放教室
-     */
-    private ArrayList<Classroom> mSleepingClassrooms;
+    public ArrayList<Classroom> getmClassrooms() {
+        return mClassrooms;
+    }
 
     /**
-     * 开放教室列表
+     * 教室
      */
-    private ArrayList<Classroom> mOpenClassrooms;
+    private ArrayList<Classroom> mClassrooms;
 
-    /**
-     * 借用中教室列表
-     */
-    private ArrayList<Classroom> mRentClassrooms;
 
     private static ClassroomManage classroomManage;
 
@@ -36,9 +31,7 @@ public class ClassroomManage {
     }
 
     private ClassroomManage(){
-        mSleepingClassrooms=LoadClassroomUtil.LoadClassroom();
-        mOpenClassrooms=new ArrayList<>();
-        mRentClassrooms=new ArrayList<>();
+        mClassrooms= LoadUtil.LoadClassroom();
         control();
     }
 
@@ -46,9 +39,15 @@ public class ClassroomManage {
      * 即需要增加教室时启用
      */
     private void addClassroom(){
-        Classroom classroom=mSleepingClassrooms.get(0);
-        mSleepingClassrooms.remove(0);
-        mOpenClassrooms.add(classroom);
+        Classroom newClassroom;
+        for (int i=0;i<mClassrooms.size();i++){
+            newClassroom=mClassrooms.get(i);
+            if (newClassroom.state==Classroom.CLOSE &&newClassroom.classroomClient!=null){
+                newClassroom.openClassroom();
+                break;
+            }
+        }
+
     }
 
     /**
@@ -57,8 +56,7 @@ public class ClassroomManage {
      */
     private void deleteClassroom(String name){
         Classroom classroom=getClassroom(name);
-        mOpenClassrooms.remove(classroom);
-        mSleepingClassrooms.add(classroom);
+        classroom.closeClassroom();
     }
 
     /**
@@ -66,18 +64,10 @@ public class ClassroomManage {
      * @param name 教室名字
      * @return
      */
-    private Classroom getClassroom(String name){
-        for (int i = 0; i< mOpenClassrooms.size(); i++){
-            if (mOpenClassrooms.get(i).name.equals(name))
-                return mOpenClassrooms.get(i);
-        }
-        for (int i = 0; i< mSleepingClassrooms.size(); i++){
-            if (mSleepingClassrooms.get(i).name.equals(name))
-                return  mSleepingClassrooms.get(i);
-        }
-        for (int i = 0; i< mRentClassrooms.size(); i++){
-            if (mRentClassrooms.get(i).name.equals(name))
-                return  mRentClassrooms.get(i);
+    public Classroom getClassroom(String name){
+        for (int i = 0; i< mClassrooms.size(); i++){
+            if (mClassrooms.get(i).name.equals(name))
+                return mClassrooms.get(i);
         }
         return null;
     }
@@ -96,11 +86,22 @@ public class ClassroomManage {
                 addClassroom();
                 while (true){
                     //查找有没有需要关闭的教室。默认保留2间常开教室、最多允许一件额外的教室里少于5人
-                    if (mOpenClassrooms.size()>2){
+
+                    ArrayList<Classroom> openClassrooms=getOpenClassrooms();
+                    if (openClassrooms.size()>2){
                         ArrayList<String > indexsDelete=new ArrayList<>();
-                        for (int i=2;i<mOpenClassrooms.size();i++){
-                            if (mOpenClassrooms.get(i).classroomClient.currentNumOfStudents<5)
-                                indexsDelete.add(mOpenClassrooms.get(i).name);
+                        Classroom classroom;
+                        for (int i=0;i<openClassrooms.size();i++){
+                            classroom=openClassrooms.get(i);
+                            if (classroom.classroomClient!=null){
+                                //教室设备运转正常
+                                if (classroom.classroomClient.currentNumOfStudents<5)
+                                    indexsDelete.add(classroom.name);
+                            }else {
+                                //教室设备出现问题,设置为异常教室。通知管理员
+                                classroom.state=Classroom.EXCEPTION;
+                            }
+
                         }
                         if (indexsDelete.size()>1){
                             for (int i=1;i<indexsDelete.size();i++){
@@ -108,13 +109,24 @@ public class ClassroomManage {
                             }
                         }
                     }
+
                     //搜索是否需要增加教室。当所有的教室都有超过30人时，就增加新的教室
+                    openClassrooms=getOpenClassrooms();
                     int count=0;
-                    for (int i=0;i<mOpenClassrooms.size();i++){
-                        if (mOpenClassrooms.get(i).classroomClient.currentNumOfStudents>30)
-                            count++;
+                    Classroom classroom;
+                    for (int i=0;i<openClassrooms.size();i++){
+                        classroom=openClassrooms.get(i);
+                        if (classroom.classroomClient!=null){
+                            //教室设备运转正常
+                            if (openClassrooms.get(i).classroomClient.currentNumOfStudents>30)
+                                count++;
+                        }else {
+                            //教室设备出现问题,设置为异常教室。通知管理员
+                            classroom.state=Classroom.EXCEPTION;
+
+                        }
                     }
-                    if (count==mOpenClassrooms.size())
+                    if (count==openClassrooms.size())
                         addClassroom();
                     //每5分钟进行一次检查操作
                     try {
@@ -125,4 +137,29 @@ public class ClassroomManage {
                 }
         }).start();
     }
+
+
+
+
+
+
+
+
+
+
+
+
+    /*------------------------------以下方法为辅助方法-------------------------------------*/
+
+    public ArrayList<Classroom> getOpenClassrooms(){
+        ArrayList<Classroom> classrooms=new ArrayList<>();
+        Classroom classroom;
+        for (int i=0;i<mClassrooms.size();i++){
+            classroom=mClassrooms.get(i);
+            if(classroom.state==Classroom.OPEN)
+                classrooms.add(classroom);
+        }
+        return classrooms;
+    }
+
 }

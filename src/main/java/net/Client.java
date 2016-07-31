@@ -14,7 +14,7 @@ public abstract class Client implements Runnable{
 
     public Client(Socket client) {
         socket = client;
-
+        messages=new ArrayList<>();
         try {
             socket.setKeepAlive(true);
         } catch (SocketException e) {
@@ -51,8 +51,14 @@ public abstract class Client implements Runnable{
         }).start();
     }
 
+    public void addMessage(String s){
+        messages.add(s);
+    }
+
+
     protected abstract void write();
     protected abstract void read();
+
     protected abstract void handleMessage(String s);
 
 }

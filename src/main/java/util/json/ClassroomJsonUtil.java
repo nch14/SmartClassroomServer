@@ -9,7 +9,7 @@ import vo.Classroom;
  */
 public class ClassroomJsonUtil {
 
-    public static Classroom getClassroom(JSONObject json){
+/*    public static Classroom getClassroom(JSONObject json){
         Classroom classroom=new Classroom();
         try {
             classroom.temperature=json.getString("temperature");
@@ -23,21 +23,23 @@ public class ClassroomJsonUtil {
             e.printStackTrace();
         }
         return null;
-    }
+    }*/
 
     public static JSONObject packClassroom(Classroom classroom){
         JSONObject json=new JSONObject();
-        try {
-            json.put("temperature",classroom.temperature);
-            json.put("currentNumOfStudents",classroom.currentNumOfStudents);
-            json.put("humidity",classroom.humidity);
-            json.put("name",classroom.name);
-            json.put("state",classroom.state);
+        if (classroom.classroomClient!=null){
+            try {
+                json.put("temperature",classroom.classroomClient.temperature);
+                json.put("currentNumOfStudents",classroom.classroomClient.currentNumOfStudents);
+                json.put("humidity",classroom.classroomClient.humidity);
+                json.put("name",classroom.name);
+                json.put("state",classroom.state);
 
-            return json;
-        } catch (JSONException e) {
-            e.printStackTrace();
+                return json;
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
-            return null;
+        return null;
     }
 }
