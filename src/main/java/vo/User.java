@@ -16,4 +16,8 @@ public class User {
 
     public int identify;
 
+    public String nickName;
+
+    public String motto;
+
 }

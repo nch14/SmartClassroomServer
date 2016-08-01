@@ -12,7 +12,6 @@ public class Classroom {
     public static final int RENT=3;
     public static final int EXCEPTION=4;
 
-
     /**
      * 例如：甲区501
      * 作为教室的唯一标识、不可重复

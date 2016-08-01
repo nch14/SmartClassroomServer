@@ -1,8 +1,10 @@
 package util;
 
+import po.BlogMessagePO;
 import po.RentLogPO;
 import po.RentLogUser;
 import po.UserPO;
+import vo.BlogMessage;
 import vo.RentLog;
 import vo.User;
 
@@ -23,6 +25,8 @@ public class PO2VO {
         user.identify=userPO.getIdentify();
         user.password=userPO.getPassword();
         user.username=userPO.getUsername();
+        user.nickName=userPO.getNickName();
+        user.motto=userPO.getMotto();
         return user;
     }
 
@@ -71,5 +75,26 @@ public class PO2VO {
             list.add(segs[i]);
         }
         return list;
+    }
+
+
+    public static BlogMessagePO vo2po(BlogMessage blogMessage){
+        BlogMessagePO blogMessagePO=new BlogMessagePO();
+        blogMessagePO.setAuthorId(blogMessage.author.id);
+        blogMessagePO.setId(blogMessage.id);
+        blogMessagePO.setSendTime(blogMessage.sendTime.toString());
+        blogMessagePO.setTag(blogMessage.tag);
+        blogMessagePO.setText(blogMessage.text);
+        return blogMessagePO;
+    }
+
+    public static BlogMessage po2vo(BlogMessagePO blogMessagePO){
+        BlogMessage blogMessage=new BlogMessage();
+        blogMessage.author=po2vo(LoadUtil.loadUser(blogMessagePO.getAuthorId()));
+        blogMessage.id=blogMessagePO.getId();
+        blogMessage.sendTime=new Date(blogMessagePO.getSendTime());
+        blogMessage.tag=blogMessagePO.getTag();
+        blogMessage.text=blogMessagePO.getText();
+        return blogMessage;
     }
 }

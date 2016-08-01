@@ -10,8 +10,6 @@ import java.util.ArrayList;
 public class ServerHardWare {
     public static final int PORT = 12345;//
 
-    ArrayList<Socket> s;
-
     private static ServerHardWare server;
     public static ServerHardWare getServer(){
         if (server==null)
@@ -25,7 +23,7 @@ public class ServerHardWare {
             public void run() {
                 try {
                     ServerSocket serverSocket = new ServerSocket(PORT);
-                    System.out.println("设备端口已经打开");
+                    System.out.println("端口已经打开");
                     while (true) {
                         // 一旦有堵塞, 则表示服务器与客户端获得了连接
                         Socket client = serverSocket.accept();

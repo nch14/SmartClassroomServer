@@ -78,11 +78,25 @@ public class ClassroomManage {
     }
 
     /**
+     * 获得当前开放的教室
+     * @return
+     */
+    public ArrayList<Classroom> getOpenClassrooms(){
+        ArrayList<Classroom> classrooms=new ArrayList<>();
+        Classroom classroom;
+        for (int i=0;i<mClassrooms.size();i++){
+            classroom=mClassrooms.get(i);
+            if(classroom.state==Classroom.OPEN)
+                classrooms.add(classroom);
+        }
+        return classrooms;
+    }
+
+    /**
      * 职责：管理增加教室的开放还是减少教室的开放
      */
     private void control(){
         new Thread(()-> {
-                addClassroom();
                 addClassroom();
                 while (true){
                     //查找有没有需要关闭的教室。默认保留2间常开教室、最多允许一件额外的教室里少于5人
@@ -151,15 +165,6 @@ public class ClassroomManage {
 
     /*------------------------------以下方法为辅助方法-------------------------------------*/
 
-    public ArrayList<Classroom> getOpenClassrooms(){
-        ArrayList<Classroom> classrooms=new ArrayList<>();
-        Classroom classroom;
-        for (int i=0;i<mClassrooms.size();i++){
-            classroom=mClassrooms.get(i);
-            if(classroom.state==Classroom.OPEN)
-                classrooms.add(classroom);
-        }
-        return classrooms;
-    }
+
 
 }

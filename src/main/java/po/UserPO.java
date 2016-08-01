@@ -15,6 +15,10 @@ public class UserPO {
 
     private int identify;
 
+    private String nickName;
+
+    private String motto;
+
     public String getPassword() {
         return password;
     }
@@ -47,5 +51,21 @@ public class UserPO {
 
     public void setIdentify(int identify) {
         this.identify = identify;
+    }
+
+    public String getNickName() {
+        return nickName;
+    }
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
+    }
+
+    public String getMotto() {
+        return motto;
+    }
+
+    public void setMotto(String motto) {
+        this.motto = motto;
     }
 }

@@ -28,12 +28,10 @@ public abstract class Client implements Runnable{
     public void run() {
         System.out.println("客户端数据已经连接" + "客户端地址：" + socket.getInetAddress().toString());
         //有没有要读的。要读就读一下
-        new Thread(new Runnable() {
-            public void run() {
+        new Thread(()-> {
                 while (true){
                     read();
                 }
-            }
         }).start();
         //有没有要写的。要写就写一下
         new Thread(()-> {

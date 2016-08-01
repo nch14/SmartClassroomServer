@@ -4,9 +4,11 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
+import po.BlogMessagePO;
 import po.ClassroomPO;
 import po.RentLogPO;
 import po.UserPO;
+import vo.BlogMessage;
 import vo.Classroom;
 import vo.RentLog;
 import vo.User;
@@ -97,5 +99,33 @@ public class LoadUtil {
         session.close();
         sf.close();
         return (ArrayList<String>) list;
+    }
+
+
+    public static ArrayList<BlogMessage> loadBlogMessages(long sinceId,long maxId,int items){
+        Configuration cfg=new Configuration();
+        SessionFactory sf=cfg.configure().buildSessionFactory();
+        Session session=sf.openSession();
+        String hql = "from BlogMessagePO as r ";
+        if (sinceId!=-1&&maxId!=-1){
+            hql+="where r.id>"+sinceId+"and r.id<"+maxId;
+        }else if (sinceId!=-1){
+            hql+="where r.id>"+sinceId;
+        }else if (maxId!=-1){
+            hql+="where r.id<"+maxId;
+        }
+        Query query = session.createQuery(hql);
+        List<BlogMessagePO> list = query.list();
+        session.close();
+        sf.close();
+
+        ArrayList<BlogMessage> blogMessages=new ArrayList<>();
+        if (list!=null){
+            int max=Math.min(list.size(),items);
+            for (int i=0;i<max;i++){
+                blogMessages.add(PO2VO.po2vo(list.get(i)));
+            }
+        }
+        return blogMessages;
     }
 }
