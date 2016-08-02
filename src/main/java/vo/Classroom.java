@@ -51,13 +51,13 @@ public class Classroom {
     public String getH(){
         if (classroomClient!=null)
             return classroomClient.humidity;
-        return "null";
+        return "数据不存在";
     }
 
     public String getT(){
         if (classroomClient!=null)
             return classroomClient.temperature+"°C";
-        return "null";
+        return "数据不存在";
     }
     public int getNumOfStudent(){
         if (classroomClient!=null)

@@ -2,8 +2,11 @@ package util.json;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import po.AttitudePO;
 import po.BlogMessagePO;
 import po.UserPO;
+import util.TimeUtil;
+import vo.BlogComments;
 import vo.BlogMessage;
 import vo.Classroom;
 import vo.User;
@@ -12,22 +15,6 @@ import vo.User;
  * Created by chenh on 2016/7/27.
  */
 public class JsonUtil {
-
-/*    public static Classroom getClassroom(JSONObject json){
-        Classroom classroom=new Classroom();
-        try {
-            classroom.temperature=json.getString("temperature");
-            classroom.currentNumOfStudents=json.getInt("currentNumOfStudents");
-            classroom.humidity=json.getString("humidity");
-            classroom.name=json.getString("name");
-            classroom.state=json.getInt("state");
-
-            return classroom;
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }*/
 
     public static JSONObject packClassroom(Classroom classroom){
         JSONObject json=new JSONObject();
@@ -51,10 +38,20 @@ public class JsonUtil {
     public static JSONObject pack(BlogMessage blogMessage){
         JSONObject json=new JSONObject();
         json.put("id",blogMessage.id);
-        json.put("sendTime",blogMessage.sendTime.toString());
+        json.put("sendTime",TimeUtil.getTime(blogMessage.sendTime));
         json.put("tag",blogMessage.tag);
         json.put("text",blogMessage.text);
         json.put("author",pack(blogMessage.author));
+        return json;
+    }
+
+    public static JSONObject pack(BlogComments blogComments){
+        JSONObject json=new JSONObject();
+        json.put("id",blogComments.id);
+        json.put("sendTime", TimeUtil.getTime(blogComments.sendTime));
+        json.put("rawMessageId",blogComments.rawMessageId);
+        json.put("text",blogComments.text);
+        json.put("author",pack(blogComments.author));
         return json;
     }
 
@@ -80,8 +77,12 @@ public class JsonUtil {
         return json;
     }
 
-
-/*    public static BlogMessagePO parse(JSONObject json){
-
-    }*/
+    public static JSONObject pack(AttitudePO attitudePO){
+        JSONObject json=new JSONObject();
+        json.put("id",attitudePO.getId());
+        json.put("sheetId",attitudePO.getSheetId());
+        json.put("userId",attitudePO.getUserId());
+        json.put("attitude",attitudePO.isAttitude());
+        return json;
+    }
 }

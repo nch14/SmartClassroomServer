@@ -1,13 +1,9 @@
 package util;
 
-import po.BlogMessagePO;
-import po.RentLogPO;
-import po.RentLogUser;
-import po.UserPO;
-import vo.BlogMessage;
-import vo.RentLog;
-import vo.User;
+import po.*;
+import vo.*;
 
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.UUID;
@@ -33,13 +29,13 @@ public class PO2VO {
     public static RentLogPO vo2po(RentLog rentLog){
         RentLogPO rentLogPO=new RentLogPO();
         rentLogPO.setUuid(rentLog.uuid.toString());
-        rentLogPO.setApplyTime(rentLog.applyReason);
-        rentLogPO.setApplyTime(rentLog.applyTime.toString());
-        rentLogPO.setHandleTime(rentLog.handleTime.toString());
+        rentLogPO.setApplyReason(rentLog.applyReason);
+        rentLogPO.setApplyTime(TimeUtil.getTime(rentLog.applyTime));
+        rentLogPO.setHandleTime(TimeUtil.getTime(rentLog.handleTime));
         rentLogPO.setHandleDescription(rentLog.handleDescription);
         rentLogPO.setClassName(rentLog.className);
-        rentLogPO.setStartData(rentLog.startData.toString());
-        rentLogPO.setEndData(rentLog.endData.toString());
+        rentLogPO.setStartData(TimeUtil.getTime(rentLog.startData));
+        rentLogPO.setEndData(TimeUtil.getTime(rentLog.endData));
         rentLogPO.setState(rentLog.state);
         return rentLogPO;
     }
@@ -47,11 +43,11 @@ public class PO2VO {
     public static RentLog po2vo(RentLogPO rentLogPO){
         RentLog rentLog=new RentLog();
         rentLog.applyReason=rentLogPO.applyReason;
-        rentLog.applyTime=new Date(rentLogPO.applyTime);
-        rentLog.handleTime=new Date(rentLogPO.handleTime);
+        rentLog.applyTime=TimeUtil.getDate(rentLogPO.applyTime);
+        rentLog.handleTime=TimeUtil.getDate(rentLogPO.handleTime);
         rentLog.handleDescription=rentLogPO.handleDescription;
-        rentLog.startData=new Date(rentLogPO.startData);
-        rentLog.endData=new Date(rentLogPO.endData);
+        rentLog.startData=TimeUtil.getDate(rentLogPO.startData);
+        rentLog.endData=TimeUtil.getDate(rentLogPO.endData);
         ArrayList<String> studentIDs=loadStudentIDs(rentLogPO.uuid);
         rentLog.studentIDs=studentIDs;
         rentLog.className=rentLogPO.className;
@@ -82,7 +78,7 @@ public class PO2VO {
         BlogMessagePO blogMessagePO=new BlogMessagePO();
         blogMessagePO.setAuthorId(blogMessage.author.id);
         blogMessagePO.setId(blogMessage.id);
-        blogMessagePO.setSendTime(blogMessage.sendTime.toString());
+        blogMessagePO.setSendTime(TimeUtil.getTime(blogMessage.sendTime));
         blogMessagePO.setTag(blogMessage.tag);
         blogMessagePO.setText(blogMessage.text);
         return blogMessagePO;
@@ -92,9 +88,50 @@ public class PO2VO {
         BlogMessage blogMessage=new BlogMessage();
         blogMessage.author=po2vo(LoadUtil.loadUser(blogMessagePO.getAuthorId()));
         blogMessage.id=blogMessagePO.getId();
-        blogMessage.sendTime=new Date(blogMessagePO.getSendTime());
+        blogMessage.sendTime=TimeUtil.getDate(blogMessagePO.getSendTime());
         blogMessage.tag=blogMessagePO.getTag();
         blogMessage.text=blogMessagePO.getText();
         return blogMessage;
+    }
+
+
+    public static AttitudeVO po2vo(AttitudePO attitudePO){
+        AttitudeVO attitudeVO=new AttitudeVO();
+        attitudeVO.attitude=attitudePO.isAttitude();
+        attitudeVO.id=attitudePO.getId();
+        attitudeVO.sheetId=attitudePO.getSheetId();
+        attitudeVO.userId=attitudePO.getUserId();
+
+        return attitudeVO;
+    }
+
+    public static AttitudePO vo2po(AttitudeVO attitudeVO){
+        AttitudePO attitudePO=new AttitudePO();
+        attitudePO.setAttitude(attitudeVO.attitude);
+        attitudePO.setId(attitudeVO.id);
+        attitudePO.setSheetId(attitudeVO.sheetId);
+        attitudePO.setUserId(attitudeVO.userId);
+
+        return attitudePO;
+    }
+
+    public static BlogCommentPO vo2po(BlogComments blogComments){
+        BlogCommentPO blogCommentPO=new BlogCommentPO();
+        //blogCommentPO.set
+
+
+        return null;
+    }
+
+    public static BlogComments po2vo(BlogCommentPO blogCommentPO){
+        BlogComments blogComments=new BlogComments();
+        blogComments.author=po2vo(LoadUtil.loadUser(blogCommentPO.getAuthorId()));
+        blogComments.id=blogCommentPO.getId();
+        blogComments.rawMessageId=blogCommentPO.getRawMessageId();
+        blogComments.sendTime= TimeUtil.getDate(blogCommentPO.getSendTime());
+        blogComments.text=blogCommentPO.getText();
+
+
+        return blogComments;
     }
 }

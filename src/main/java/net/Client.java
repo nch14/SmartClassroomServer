@@ -30,17 +30,37 @@ public abstract class Client implements Runnable{
         //有没有要读的。要读就读一下
         new Thread(()-> {
                 while (true){
-                    read();
+                    try {
+                        read();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        try {
+                            socket.close();
+                        } catch (IOException e1) {
+                            e1.printStackTrace();
+                        }
+                        break;
+                    }
                 }
         }).start();
         //有没有要写的。要写就写一下
         new Thread(()-> {
             while (true) {
                 if (messages.size()!=0) {
-                    write();
+                    try {
+                        write();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        try {
+                            socket.close();
+                        } catch (IOException e1) {
+                            e1.printStackTrace();
+                        }
+                        break;
+                    }
                 }
                 try {
-                    Thread.sleep(100);
+                    Thread.sleep(50);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -54,8 +74,8 @@ public abstract class Client implements Runnable{
     }
 
 
-    protected abstract void write();
-    protected abstract void read();
+    protected abstract void write() throws IOException;
+    protected abstract void read() throws IOException;
 
     protected abstract void handleMessage(String s);
 

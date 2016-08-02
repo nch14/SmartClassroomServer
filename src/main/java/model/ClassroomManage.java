@@ -109,7 +109,7 @@ public class ClassroomManage {
                             classroom=openClassrooms.get(i);
                             if (classroom.classroomClient!=null){
                                 //教室设备运转正常
-                                if (classroom.classroomClient.currentNumOfStudents<5)
+                                if (classroom.classroomClient.currentNumOfStudents<1)
                                     indexsDelete.add(classroom.name);
                             }else {
                                 //教室设备出现问题,设置为异常教室。通知管理员
@@ -124,7 +124,7 @@ public class ClassroomManage {
                         }
                     }
 
-                    //搜索是否需要增加教室。当所有的教室都有超过30人时，就增加新的教室
+                    //搜索是否需要增加教室。当所有的教室都有超过5人时，就增加新的教室
                     openClassrooms=getOpenClassrooms();
                     int count=0;
                     Classroom classroom;
@@ -132,7 +132,7 @@ public class ClassroomManage {
                         classroom=openClassrooms.get(i);
                         if (classroom.classroomClient!=null){
                             //教室设备运转正常
-                            if (openClassrooms.get(i).classroomClient.currentNumOfStudents>30)
+                            if (openClassrooms.get(i).classroomClient.currentNumOfStudents>5)
                                 count++;
                         }else {
                             //教室设备出现问题,设置为异常教室。通知管理员
@@ -144,7 +144,7 @@ public class ClassroomManage {
                         addClassroom();
                     //每5分钟进行一次检查操作
                     try {
-                        Thread.sleep(300000);
+                        Thread.sleep(10000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }

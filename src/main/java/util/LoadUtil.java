@@ -4,14 +4,8 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
-import po.BlogMessagePO;
-import po.ClassroomPO;
-import po.RentLogPO;
-import po.UserPO;
-import vo.BlogMessage;
-import vo.Classroom;
-import vo.RentLog;
-import vo.User;
+import po.*;
+import vo.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -128,4 +122,93 @@ public class LoadUtil {
         }
         return blogMessages;
     }
+
+    public static BlogMessagePO loadBlogMessages(long id){
+        Configuration cfg=new Configuration();
+        SessionFactory sf=cfg.configure().buildSessionFactory();
+        Session session=sf.openSession();
+        String hql = "from BlogMessagePO as r where r.id = "+id;
+        Query query = session.createQuery(hql);
+        List<BlogMessagePO> list = query.list();
+        session.close();
+        sf.close();
+        if (list!=null){
+            return list.get(0);
+        }
+        return null;
+    }
+
+    public static AttitudePO loadBlogMessages(long sheetId,String userId,boolean attitude){
+        Configuration cfg=new Configuration();
+        SessionFactory sf=cfg.configure().buildSessionFactory();
+        Session session=sf.openSession();
+        String hql = "from AttitudePO as r where r.sheetId = "+sheetId+ " and r.userId =" +userId+" and r.attitude = "+attitude;
+        Query query = session.createQuery(hql);
+        List<AttitudePO> list = query.list();
+        session.close();
+        sf.close();
+        if (list!=null){
+            return list.get(0);
+        }
+        return null;
+    }
+
+    public static ArrayList<AttitudePO> loadBlogMessages(long sheetId,String userId){
+        Configuration cfg=new Configuration();
+        SessionFactory sf=cfg.configure().buildSessionFactory();
+        Session session=sf.openSession();
+        String hql = "from AttitudePO as r where r.sheetId = "+sheetId+ " and r.userId =" +userId;
+        Query query = session.createQuery(hql);
+        List<AttitudePO> list = query.list();
+        session.close();
+        sf.close();
+        return (ArrayList<AttitudePO>) list;
+    }
+
+
+    public static ArrayList<AttitudePO> loadAttitudePOs(long sheetId){
+        Configuration cfg=new Configuration();
+        SessionFactory sf=cfg.configure().buildSessionFactory();
+        Session session=sf.openSession();
+        String hql = "from AttitudePO as r where r.sheetId = "+sheetId;
+        Query query = session.createQuery(hql);
+        List<AttitudePO> list = query.list();
+        session.close();
+        sf.close();
+        return (ArrayList<AttitudePO>) list;
+    }
+
+    public static int countAttitudePOs(long sheetId,boolean attitude){
+        Configuration cfg=new Configuration();
+        SessionFactory sf=cfg.configure().buildSessionFactory();
+        Session session=sf.openSession();
+        String hql = "select count (*) from AttitudePO as r where r.sheetId = "+sheetId + " and r.attitude = "+attitude;
+        Query query = session.createQuery(hql);
+        int count = (int) query.uniqueResult();
+        session.close();
+        sf.close();
+        return count;
+    }
+
+
+    public static ArrayList<BlogComments> loadBlogComments(long sheetId){
+        Configuration cfg=new Configuration();
+        SessionFactory sf=cfg.configure().buildSessionFactory();
+        Session session=sf.openSession();
+        String hql = "from BlogCommentPO as r where r.rawMessageId = "+sheetId;
+        Query query = session.createQuery(hql);
+        List<BlogCommentPO> list = query.list();
+        session.close();
+        sf.close();
+
+        ArrayList<BlogComments> blogComments=new ArrayList<>();
+        if (list!=null){
+            for (BlogCommentPO blogCommentPO:list){
+                blogComments.add(PO2VO.po2vo(blogCommentPO));
+            }
+        }
+        return blogComments;
+    }
+
+
 }

@@ -33,6 +33,7 @@ public class BlogMessagePO {
      */
     private String tag;
 
+
     public long getId() {
         return id;
     }
@@ -72,4 +73,5 @@ public class BlogMessagePO {
     public void setTag(String tag) {
         this.tag = tag;
     }
+
 }
