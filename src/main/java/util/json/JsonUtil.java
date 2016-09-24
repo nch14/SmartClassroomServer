@@ -4,6 +4,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import po.AttitudePO;
 import po.BlogMessagePO;
+import po.TimeTableCourse;
 import po.UserPO;
 import util.TimeUtil;
 import vo.BlogComments;
@@ -30,6 +31,24 @@ public class JsonUtil {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+        }
+        return null;
+    }
+
+    public static User getUser(JSONObject json){
+        User user=new User();
+        try {
+            user.id=json.getString("id");
+            user.identify=json.getInt("identify");
+            user.password=json.getString("password");
+            user.username=json.getString("username");
+            user.nickName=json.getString("nickName");
+            user.motto=json.getString("motto");
+            user.courseEnabled=json.getBoolean("courseEnabled");
+            user.university=json.getString("university");
+            return user;
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
         return null;
     }
@@ -63,6 +82,8 @@ public class JsonUtil {
         json.put("username",userPO.getUsername());
         json.put("nickName",userPO.getNickName());
         json.put("motto",userPO.getMotto());
+        json.put("university",userPO.getUniversity());
+        json.put("courseEnabled",userPO.isCourseEnabled());
         return json;
     }
 
@@ -74,6 +95,8 @@ public class JsonUtil {
         json.put("username",user.username);
         json.put("nickName",user.nickName);
         json.put("motto",user.motto);
+        json.put("university",user.university);
+        json.put("courseEnabled",user.courseEnabled);
         return json;
     }
 
@@ -85,4 +108,23 @@ public class JsonUtil {
         json.put("attitude",attitudePO.isAttitude());
         return json;
     }
+
+    public static JSONObject pack(TimeTableCourse timeTableCourse){
+        JSONObject json=new JSONObject();
+        json.put("id",timeTableCourse.getId());
+        json.put("userKey",(timeTableCourse.getUserKey()==null?timeTableCourse.getUserKey():"暂时没有"));
+        json.put("term",(timeTableCourse.getTerm()==null?timeTableCourse.getTerm():"暂时没有"));
+        json.put("courseClassroom",timeTableCourse.getCourseClassroom());
+        json.put("courseDate",timeTableCourse.getCourseDate());
+        json.put("courseName",timeTableCourse.getCourseName());
+        json.put("courseTeacher",timeTableCourse.getCourseTeacher());
+        json.put("courseType",timeTableCourse.getCourseType());
+        json.put("note",(timeTableCourse.getNote()==null?timeTableCourse.getNote():"暂时没有"));
+        json.put("campus",timeTableCourse.getCampus());
+        json.put("startSection",timeTableCourse.getStartSection());
+        json.put("lastSection",timeTableCourse.getLastSection());
+        json.put("week",timeTableCourse.getWeek());
+        return json;
+    }
+
 }

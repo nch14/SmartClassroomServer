@@ -20,4 +20,8 @@ public class User {
 
     public String motto;
 
+    public String university;//所在学校
+
+    public boolean courseEnabled;//是否启用课程表
+
 }

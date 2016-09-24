@@ -6,13 +6,19 @@
 
     <groupId>cn.chenh</groupId>
     <artifactId>SmartClassroomServer</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.2-SNAPSHOT</version>
 
     <dependencies>
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>5.1.38</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
+            <version>1.8.3</version>
         </dependency>
 
         <!-- http://mvnrepository.com/artifact/org.json/json -->
@@ -35,6 +41,13 @@
             <artifactId>junit</artifactId>
             <version>4.12</version>
         </dependency>
+
+        <dependency>
+            <groupId>io.jstack</groupId>
+            <artifactId>sendcloud4j</artifactId>
+            <version>0.0.4</version>
+        </dependency>
+
 
     </dependencies>
 
@@ -59,7 +72,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib</classpathPrefix>
-                            <mainClass>main.Setup</mainClass>
+                            <mainClass>main.SmartClassroomServer</mainClass>
                         </manifest>
                         <manifestEntries>
                             <Class-Path>.</Class-Path>

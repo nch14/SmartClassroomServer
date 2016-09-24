@@ -8,6 +8,7 @@ import po.*;
 import vo.*;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -42,16 +43,16 @@ public class LoadUtil {
         Configuration cfg=new Configuration();
         SessionFactory sf=cfg.configure().buildSessionFactory();
         Session session=sf.openSession();
-        String hql = "from ClassroomPO ";
+        String hql = "from RentLogPO as c ";
         switch (type){
             case RentLog.WAITING_TO_HANDLE:
-                hql+="where state = 1";
+                hql+="where c.state = 1";
                 break;
             case RentLog.PASS_BUT_NOT_TAKE_EFFECT:
-                hql+="where state = 2";
+                hql+="where c.state = 2";
                 break;
             case RentLog.PASS_AND_IN_USE:
-                hql+="where state= 3";
+                hql+="where c.state= 3";
                 break;
         }
         Query query = session.createQuery(hql);
@@ -208,6 +209,32 @@ public class LoadUtil {
             }
         }
         return blogComments;
+    }
+
+    public static ArrayList<TimeTableCourse> loadTimeTableCourses(int week){
+        Configuration cfg=new Configuration();
+        SessionFactory sf=cfg.configure().buildSessionFactory();
+        Session session=sf.openSession();
+        String hql = "from TimeTableCourse as t where t.week ="+week;
+        Query query = session.createQuery(hql);
+        List<TimeTableCourse> list = query.list();
+        session.close();
+        sf.close();
+
+        return (ArrayList<TimeTableCourse>) list;
+    }
+
+    public static ArrayList<TimeTableCourse> loadTimeTableCourses(int week,String userKey){
+        Configuration cfg=new Configuration();
+        SessionFactory sf=cfg.configure().buildSessionFactory();
+        Session session=sf.openSession();
+        String hql = "from TimeTableCourse as t where t.week ="+week+"and t.userKey = "+userKey;
+        Query query = session.createQuery(hql);
+        List<TimeTableCourse> list = query.list();
+        session.close();
+        sf.close();
+
+        return (ArrayList<TimeTableCourse>) list;
     }
 
 

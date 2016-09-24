@@ -99,49 +99,53 @@ public class ClassroomManage {
         new Thread(()-> {
                 addClassroom();
                 while (true){
-                    //查找有没有需要关闭的教室。默认保留2间常开教室、最多允许一件额外的教室里少于5人
-
+                    //查找有没有需要关闭的教室。默认保留1间常开教室、最多允许一件额外的教室里少于1人
+                    boolean close=false;
                     ArrayList<Classroom> openClassrooms=getOpenClassrooms();
-                    if (openClassrooms.size()>2){
-                        ArrayList<String > indexsDelete=new ArrayList<>();
+                    if (openClassrooms.size()>1){
                         Classroom classroom;
-                        for (int i=0;i<openClassrooms.size();i++){
+                        for (int i=1;i<openClassrooms.size();i++){
                             classroom=openClassrooms.get(i);
                             if (classroom.classroomClient!=null){
                                 //教室设备运转正常
-                                if (classroom.classroomClient.currentNumOfStudents<1)
-                                    indexsDelete.add(classroom.name);
+                                if (classroom.classroomClient.currentNumOfStudents<1) {
+                                    deleteClassroom(classroom.name);
+                                    close=true;
+                                }
                             }else {
                                 //教室设备出现问题,设置为异常教室。通知管理员
                                 classroom.state=Classroom.EXCEPTION;
-                            }
-
-                        }
-                        if (indexsDelete.size()>1){
-                            for (int i=1;i<indexsDelete.size();i++){
-                                deleteClassroom(indexsDelete.get(i));
                             }
                         }
                     }
 
                     //搜索是否需要增加教室。当所有的教室都有超过5人时，就增加新的教室
-                    openClassrooms=getOpenClassrooms();
-                    int count=0;
-                    Classroom classroom;
-                    for (int i=0;i<openClassrooms.size();i++){
-                        classroom=openClassrooms.get(i);
-                        if (classroom.classroomClient!=null){
-                            //教室设备运转正常
-                            if (openClassrooms.get(i).classroomClient.currentNumOfStudents>5)
-                                count++;
+                    if (close){
+                        //刚关闭闲置教室。本轮不需要增加新教室
+                    }else {
+                        openClassrooms=getOpenClassrooms();
+                        if (openClassrooms.size()==0){
+                            addClassroom();
                         }else {
-                            //教室设备出现问题,设置为异常教室。通知管理员
-                            classroom.state=Classroom.EXCEPTION;
-
+                            int count=0;
+                            Classroom classroom;
+                            for (int i=0;i<openClassrooms.size();i++){
+                                classroom=openClassrooms.get(i);
+                                if (classroom.classroomClient!=null){
+                                    //教室设备运转正常
+                                    if (openClassrooms.get(i).classroomClient.currentNumOfStudents>5)
+                                        count++;
+                                }else {
+                                    //教室设备出现问题,设置为异常教室。通知管理员
+                                    classroom.state=Classroom.EXCEPTION;
+                                }
+                            }
+                            if (count==openClassrooms.size())
+                                addClassroom();
                         }
                     }
-                    if (count==openClassrooms.size())
-                        addClassroom();
+
+
                     //每5分钟进行一次检查操作
                     try {
                         Thread.sleep(10000);

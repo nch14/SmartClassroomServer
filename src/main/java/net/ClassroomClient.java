@@ -22,12 +22,12 @@ public class ClassroomClient extends Client implements Runnable {
     /**
      * 教室当前温度
      */
-    public String temperature;
+    public String temperature="未知";
 
     /**
      *教室当前湿度
      */
-    public String humidity;
+    public String humidity="未知";
 
     /**
      * 教室当前人数
@@ -55,6 +55,7 @@ public class ClassroomClient extends Client implements Runnable {
                     char cc=transfer(aByte);
                     s+=cc;
                 }
+                System.out.println(socket.getInetAddress()+"接受到一条数据！"+s);
                 handleMessage(s);
                 bytes.clear();
                 s="";
@@ -62,9 +63,6 @@ public class ClassroomClient extends Client implements Runnable {
                 bytes.add(b);
         }
 
-
-
-        System.out.println("接受到一条数据！");
 
     }
 
@@ -108,11 +106,12 @@ public class ClassroomClient extends Client implements Runnable {
                 currentNumOfStudents++;
                 break;
             case  '-':
-                currentNumOfStudents--;
+                if (currentNumOfStudents>0)
+                    currentNumOfStudents--;
                 break;
             case 't':
                 seg=s.split(":");
-                temperature=seg[1].substring(0,2);
+                temperature=seg[1].substring(0,2)+"℃";
                 humidity=seg[2];
                 break;
         }

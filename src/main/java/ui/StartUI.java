@@ -18,6 +18,7 @@ public class StartUI {
         frame.setLayout(null);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setBounds(0,0,1000,625);
+        frame.setTitle("教室情况");
 
         MainPanel mainPanel=new MainPanel();
         frame.add(mainPanel);

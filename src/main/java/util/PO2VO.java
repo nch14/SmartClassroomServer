@@ -23,7 +23,22 @@ public class PO2VO {
         user.username=userPO.getUsername();
         user.nickName=userPO.getNickName();
         user.motto=userPO.getMotto();
+        user.courseEnabled=userPO.isCourseEnabled();
+        user.university=userPO.getUniversity();
         return user;
+    }
+
+    public static UserPO vo2po(User user){
+        UserPO userPO=new UserPO();
+        userPO.setId(user.id);
+        userPO.setIdentify(user.identify);
+        userPO.setPassword(user.password);
+        userPO.setUsername(user.username);
+        userPO.setNickName(user.nickName);
+        userPO.setMotto(user.motto);
+        userPO.setUniversity(user.university);
+        userPO.setCourseEnabled(user.courseEnabled);
+        return userPO;
     }
 
     public static RentLogPO vo2po(RentLog rentLog){
